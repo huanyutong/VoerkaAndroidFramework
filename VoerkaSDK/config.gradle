@@ -1,0 +1,135 @@
+ext {
+    isRelease = true
+    //指定哪个作为主应用，false:组件模式 true:集成模式
+    isModule = "app"
+    // sdk版本信息配置
+    android = [
+            applicationId            : "com.hyt.voerkasdk",
+            minSdkVersion            : 15,
+            targetSdkVersion         : 29,
+            compileSdkVersion        : 29,
+            buildToolsVersion        : "29.0.3",
+            versionCode              : 1,
+            versionName              : "1.0",
+            testInstrumentationRunner: "android.support.test.runner.AndroidJUnitRunner",
+            consumerProguardFiles    : 'consumer-rules.pro'
+    ]
+
+    // 每个模块包名配置
+    appId = [
+            app : "com.hyt.voerkasdk",
+            base: "com.hyt.base",
+            main: "com.hyt.main"
+    ]
+    // 生产/测试环境配置
+    url = [
+            debug  : "http://123.34.55/debug",
+            release: "http://123.34.55/release",
+    ]
+    //三方依赖库配置
+    supportLibraryVersion = "28.0.0"
+    supportDependencies = [
+            appcompat : "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            constraint: "com.android.support.constraint:constraint-layout:1.1.3",
+            junit     : "junit:junit:4.12",
+            runner    : "com.android.support.test:runner:1.0.2",
+            espresso  : "com.android.support.test.espresso:espresso-core:3.0.2"
+    ]
+
+    //设置APP配置
+    setAppDefaultConfig = {
+        extension ->//闭包参数extension相当于android对象
+            //引用Application插件库
+            extension.apply plugin: 'com.android.application'//引入编译构建Gradle插件
+            extension.description "app"
+            setAndroidConfig extension.android
+            setDependencies extension.dependencies
+//            extension.android.defaultConfig {
+//                appliactionId  android.applicationId + "." + extension.getName()
+//            }
+    }
+
+    //设置Lib配置
+    setLibDefaultConfig = {
+        extension ->
+            extension.apply plugin: 'com.android.library'//引用lib插件库
+            extension.description "lib"
+            setAndroidConfig extension.android
+            setDependencies extension.dependencies
+    }
+
+    //设置Android配置
+    setAndroidConfig = {
+        extension ->
+            extension.compileSdkVersion android.compileSdkVersion//编译的SDK
+            extension.buildToolsVersion android.buildToolsVersion//编译的工具对应版本
+            extension.defaultConfig {//默认配置
+                minSdkVersion android.minSdkVersion//最低支持版本
+                targetSdkVersion android.targetSdkVersion//支持的目标版本
+                versionCode android.versionCode//版本号
+                versionName android.versionName//版本名
+
+                testInstrumentationRunner android.testInstrumentationRunner//测试脚本
+                consumerProguardFiles android.consumerProguardFiles
+                javaCompileOptions {
+                    annotationProcessorOptions {//路由每个模块的名称
+                        arguments = [moduleName: extension.project.getName()]
+                    }
+                }
+            }
+            extension.buildTypes{
+                release {
+                    minifyEnabled false     //打开混淆
+                    shrinkResources false   //打开资源压缩
+                }
+            }
+            extension.sourceSets {
+                main {
+                    if (isModule != extension.project.getName() && (extension.project.getName()=="main")) {
+                        manifest.srcFile 'src/debug/AndroidManifest.xml'
+                        res.srcDirs = ['src/debug/res','src/main/res']
+                    } else {
+                        manifest.srcFile 'src/main/AndroidManifest.xml'
+                        resources{
+                            //排除Java/debug文件夹下的所有文件
+                            exclude 'src/debug/*'
+                        }
+                    }
+                }
+            }
+//            extension.dataBinding{//开启databinding，可以选用
+//                enabled=true
+//            }
+    }
+
+    //设置依赖
+    setDependencies = {
+        extension ->
+            extension.implementation fileTree(dir: 'libs', include: ['*.jar'])
+            extension.implementation supportDependencies.appcompat
+            extension.testImplementation supportDependencies.junit
+            extension.androidTestImplementation supportDependencies.runner
+            extension.androidTestImplementation supportDependencies.espresso
+            //每个module都需要引用路由的apt插件库才能生成相应代码，这里无须重复编写每个module
+//            extension.annotationProcessor 'com.alibaba.arouter-compiler:1.1.1'
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

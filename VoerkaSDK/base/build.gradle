@@ -1,0 +1,19 @@
+if (isModule != project.getName()) {
+    rootProject.ext.setLibDefaultConfig project//设置Lib配置
+} else {
+    rootProject.ext.setAppDefaultConfig project//设置App配置
+}
+
+android {
+    buildTypes {
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'//混淆文件
+        }
+    }
+}
+
+dependencies {
+    implementation project(path: ':bus')
+    implementation project(path: ':data')
+    implementation project(path: ':permission')
+}

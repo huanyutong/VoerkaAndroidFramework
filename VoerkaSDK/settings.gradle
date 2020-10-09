@@ -1,0 +1,8 @@
+rootProject.name='VoerkaSDK'
+include ':app'
+include ':base'
+include ':main'
+include ':bus'
+include ':data'
+include ':permission'
+include ':app-core'

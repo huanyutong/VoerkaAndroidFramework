@@ -1,0 +1,33 @@
+//根据isModule切换组件和集成模式
+if (isModule != project.getName()) {
+    rootProject.ext.setLibDefaultConfig project//设置Lib配置
+} else {
+    rootProject.ext.setAppDefaultConfig project//设置App配置
+}
+
+android {
+    buildTypes {
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'//混淆文件
+        }
+    }
+
+//    sourceSets {
+//        main {
+//            if (isModule != project.getName()) {
+//                manifest.srcFile 'src/debug/AndroidManifest.xml'
+//                res.srcDirs = ['src/debug/res','src/main/res']
+//            } else {
+//                manifest.srcFile 'src/main/AndroidManifest.xml'
+//                resources{
+//                    //排除Java/debug文件夹下的所有文件
+//                    exclude 'src/debug/*'
+//                }
+//            }
+//        }
+//    }
+}
+
+dependencies {
+    implementation project(path: ':base')
+}

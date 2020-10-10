@@ -25,109 +25,111 @@ import android.util.Log;
  * @update [1][2020-09-08] [LinShiJing][变更描述]
  */
 public class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks {
-    private String TAG = this.getClass().getSimpleName();
+    private String tag = this.getClass().getSimpleName();
     private Activity mContext;
 
     /**
-     * 程序创建的时候执行
+     * .程序创建的时候执行
      */
     @Override
     public void onCreate() {
-        Log.d(TAG, "Application:" + TAG + ":onCreate");
+        Log.d(tag, "Application:" + tag + ":onCreate");
         super.onCreate();
         registerActivityLifecycleCallbacks(this);
     }
 
     /**
-     * 程序终止的时候执行
+     * .程序终止的时候执行
      */
     @Override
     public void onTerminate() {
-        Log.d(TAG, "Application:" + TAG + ":onTerminate");
+        Log.d(tag, "Application:" + tag + ":onTerminate");
         super.onTerminate();
         unregisterActivityLifecycleCallbacks(this);
     }
 
     /**
-     * 低内存的时候执行
+     * .低内存的时候执行
      */
     @Override
     public void onLowMemory() {
-        Log.d(TAG, "Application:" + TAG + ":onLowMemory");
+        Log.d(tag, "Application:" + tag + ":onLowMemory");
         super.onLowMemory();
     }
 
     /**
-     * 程序在内存清理的时候执行
+     * .程序在内存清理的时候执行
      *
-     * @param level
+     * @param level 等级
      */
     @Override
     public void onTrimMemory(int level) {
-        Log.d(TAG, "Application:" + TAG + ":onTrimMemory");
+        Log.d(tag, "Application:" + tag + ":onTrimMemory");
         super.onTrimMemory(level);
     }
 
     /**
-     * 配置改变时，例如手机屏幕旋转等
+     * .配置改变时，例如手机屏幕旋转等
      *
-     * @param newConfig
+     * @param newConfig 新配置
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        Log.d(TAG, "Application:" + TAG + ":onConfigurationChanged");
+        Log.d(tag, "Application:" + tag + ":onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
     /**
-     * 监听App内所有Activity的生命周期
+     * .监听App内所有Activity的生命周期
      *
-     * @param activity
-     * @param savedInstanceState
+     * @param activity           活动界面
+     * @param savedInstanceState 状态
      */
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "Application:" + TAG + ":onActivityCreated:" + activity.getLocalClassName());
+        Log.d(tag, "Application:" + tag + ":onActivityCreated:" + activity.getLocalClassName());
         mContext = activity;
     }
 
     @Override
     public void onActivityStarted(@NonNull Activity activity) {
-        Log.d(TAG, "Application:" + TAG + ":onActivityStarted:" + activity.getLocalClassName());
+        Log.d(tag, "Application:" + tag + ":onActivityStarted:" + activity.getLocalClassName());
     }
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
-        Log.d(TAG, "Application:" + TAG + ":onActivityResumed:" + activity.getLocalClassName());
+        Log.d(tag, "Application:" + tag + ":onActivityResumed:" + activity.getLocalClassName());
         mContext = activity;
     }
 
     @Override
     public void onActivityPaused(@NonNull Activity activity) {
-        Log.d(TAG, "Application:" + TAG + ":onActivityPaused:" + activity.getLocalClassName());
+        Log.d(tag, "Application:" + tag + ":onActivityPaused:" + activity.getLocalClassName());
     }
 
     @Override
     public void onActivityStopped(@NonNull Activity activity) {
-        Log.d(TAG, "Application:" + TAG + ":onActivityStopped:" + activity.getLocalClassName());
+        Log.d(tag, "Application:" + tag + ":onActivityStopped:" + activity.getLocalClassName());
     }
 
     @Override
     public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-        Log.d(TAG, "Application:" + TAG + ":onActivitySaveInstanceState:" + activity.getLocalClassName());
+        Log.d(tag, "Application:" + tag
+                + ":onActivitySaveInstanceState:" + activity.getLocalClassName());
     }
 
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
-        Log.d(TAG, "Application:" + TAG + ":onActivityDestroyed:" + activity.getLocalClassName());
+        Log.d(tag, "Application:" + tag + ":onActivityDestroyed:" + activity.getLocalClassName());
     }
 
     /**
-     * 获取底层Activity对象
+     * .获取底层Activity对象
+     *
      * @return
      */
     public Activity getTopActivity() {
-        Log.d(TAG, "Application:" + TAG + ":getTopActivity:" + mContext.getLocalClassName());
+        Log.d(tag, "Application:" + tag + ":getTopActivity:" + mContext.getLocalClassName());
         return mContext;
     }
 }

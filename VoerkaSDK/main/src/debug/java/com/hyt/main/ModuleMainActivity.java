@@ -35,7 +35,7 @@ public class ModuleMainActivity extends ModuleManageActivity {
     }
 
     /**
-     * 设定不同模块使用的布局
+     * .设定不同模块使用的布局
      *
      * @return
      */

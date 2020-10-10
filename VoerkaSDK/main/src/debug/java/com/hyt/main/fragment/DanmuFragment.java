@@ -35,9 +35,11 @@ public class DanmuFragment extends ModuleManageFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        moduleManageView = new ModuleManageView(getActivity(),savedInstanceState,view.findViewById(R.id.danmu)) {
+        moduleManageView = new ModuleManageView(getActivity(), savedInstanceState,
+                view.findViewById(R.id.danmu)) {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public ArrayMap<String, ArrayList<Integer>> moduleConfig() {

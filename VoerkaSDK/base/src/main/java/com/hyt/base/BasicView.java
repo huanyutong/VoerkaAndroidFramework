@@ -25,7 +25,7 @@ import android.view.View;
  * @update [1][2020-09-12] [LinShiJing][变更描述]
  */
 public class BasicView extends View {
-    private String TAG = this.getClass().getSimpleName();
+    private String tag = this.getClass().getSimpleName();
 
     public BasicView(Context context) {
         super(context);
@@ -40,62 +40,64 @@ public class BasicView extends View {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public BasicView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public BasicView(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
+                     int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        Log.d(TAG, "View:" + TAG + ":onFinishInflate");
+        Log.d(tag, "View:" + tag + ":onFinishInflate");
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Log.d(TAG, "View:" + TAG + ":onAttachedToWindow:View在可见时(1):View在不可见时(1):View在Gone(加载)时(1)");
+        Log.d(tag, "View:" + tag
+                + ":onAttachedToWindow:View在可见时(1):View在不可见时(1):View在Gone(加载)时(1)");
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        Log.d(TAG, "View:" + TAG + ":onMeasure:View在可见时(2):View在不可见时(2)");
+        Log.d(tag, "View:" + tag + ":onMeasure:View在可见时(2):View在不可见时(2)");
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.d(TAG, "View:" + TAG + ":onSizeChanged:View在可见时(3):View在不可见时(3)");
+        Log.d(tag, "View:" + tag + ":onSizeChanged:View在可见时(3):View在不可见时(3)");
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        Log.d(TAG, "View:" + TAG + ":onLayout:View在可见时(4):View在不可见时(4)");
+        Log.d(tag, "View:" + tag + ":onLayout:View在可见时(4):View在不可见时(4)");
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d(TAG, "View:" + TAG + ":onDraw:View在可见时(5)");
+        Log.d(tag, "View:" + tag + ":onDraw:View在可见时(5)");
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        Log.d(TAG, "View:" + TAG + ":onWindowFocusChanged:View被销毁时(1)");
+        Log.d(tag, "View:" + tag + ":onWindowFocusChanged:View被销毁时(1)");
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
-        Log.d(TAG, "View:" + TAG + ":onWindowVisibilityChanged:View被销毁时(2)");
+        Log.d(tag, "View:" + tag + ":onWindowVisibilityChanged:View被销毁时(2)");
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.d(TAG, "View:" + TAG + ":onDetachedFromWindow:View被销毁时(3)");
+        Log.d(tag, "View:" + tag + ":onDetachedFromWindow:View被销毁时(3)");
     }
 }
 

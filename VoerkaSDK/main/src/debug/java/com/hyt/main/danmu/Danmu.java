@@ -32,17 +32,17 @@ public class Danmu extends AbsModule {
     @Override
     public void init(ModuleContext moduleContext) {
         setContentView(R.layout.activity_danmu);
-//        activity = moduleContext.getActivity();
-//        parentViewGroup = moduleContext.getViewGroups().get(0);
-//        initView();
+        //        activity = moduleContext.getActivity();
+        //        parentViewGroup = moduleContext.getViewGroups().get(0);
+        //        initView();
         contentView = findViewById(R.id.danmu_content);
     }
 
-//    private void initView() {
-//        contentView = LayoutInflater.from(activity).inflate(R.layout.activity_danmu, parentViewGroup, true);
-//        contentView.findViewById(R.id.danmu_content);
-//        showToast("",Toast.LENGTH_SHORT);
-//    }
+    //    private void initView() {
+    //        contentView = LayoutInflater.from(activity).inflate(R.layout.activity_danmu, parentViewGroup, true);
+    //        contentView.findViewById(R.id.danmu_content);
+    //        showToast("",Toast.LENGTH_SHORT);
+    //    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

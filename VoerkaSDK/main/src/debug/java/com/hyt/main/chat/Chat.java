@@ -38,7 +38,8 @@ public class Chat extends AbsModule {
     }
 
     private void initView() {
-        contentView = LayoutInflater.from(activity).inflate(R.layout.activity_chat, parentViewGroup, true);
+        contentView = LayoutInflater.from(activity)
+                .inflate(R.layout.activity_chat, parentViewGroup, true);
     }
 
     @Override

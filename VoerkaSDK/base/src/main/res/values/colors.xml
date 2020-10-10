@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 通用颜色 -->
+    <color name="primarycolor_dark">#0e5a83</color>
+    <color name="primarycolor">#0680c3</color>
+    <color name="primarycolor_light">#489dca</color>
+    <color name="secondary_light">#999999</color>
+    <color name="secondary">#565656</color>
+    <color name="secondary_dark">#4b4b4b</color>
+    <color name="secondary_extraDark">#231f20</color>
+    <color name="highlight_one">#35791d</color>
+    <color name="highlight_two">#ff5151</color>
+    <color name="main_bg">#ecf0f3</color>
+    <color name="button_pressed">#036194</color>
+    <color name="button_default">#0680c3</color>
+    <color name="button1_pressed">#c04033</color>
+    <color name="button1_default">#df4534</color>
+    <color name="button2_pressed">#279030</color>
+    <color name="button2_default">#37ab41</color>
+    <color name="button3_pressed">#4f4f4f</color>
+    <color name="button3_default">#757575</color>
+    <color name="line_bg">#d6d6d8</color>
+</resources>

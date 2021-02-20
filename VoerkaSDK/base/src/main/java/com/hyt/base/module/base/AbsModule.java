@@ -23,36 +23,14 @@ import com.hyt.base.module.config.ModuleContext;
  * @update [1][2020-09-12] [LinShiJing][变更描述]
  */
 public abstract class AbsModule {
-    private ModuleContext moduleContext;
-
-    public <T extends View> T findViewById(int id) {
-        if (moduleContext != null && moduleContext.getViewGroups() != null) {
-            if (moduleContext.getViewGroups().size() > 0) {
-                return moduleContext.getViewGroups().get(0).findViewById(id);
-            }
-        }
-        return null;
-    }
-
-    public void setModuleContext(ModuleContext moduleContext) {
-        this.moduleContext = moduleContext;
-    }
-
-    public void setContentView(int layoutResID){
-        LayoutInflater.from(moduleContext.getActivity()).inflate(layoutResID, moduleContext.getViewGroups().get(0), true);
-    }
-
-    public void showToast(CharSequence text,int duration){
-        Toast.makeText(moduleContext.getActivity(),text,duration).show();
-    }
-
     /**
      * 初始化模块功能，初始化将AbsModule的参数传入
      *
      * @param moduleContext
+     * @param extend
      * @return
      */
-    public abstract void init(ModuleContext moduleContext,String extend);
+    public abstract void init(ModuleContext moduleContext, Bundle extend);
 
     /**
      * 保存状态触发

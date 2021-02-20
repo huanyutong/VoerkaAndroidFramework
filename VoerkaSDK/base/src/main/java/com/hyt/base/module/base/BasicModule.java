@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hyt.base.module.config.ModuleContext;
 
@@ -28,19 +30,27 @@ import java.util.List;
  * @update [1][2020-09-15] [LinShiJing][变更描述]
  */
 public class BasicModule extends AbsModule {
-
-    public Activity contetxt;
-    public FragmentActivity mContext;
-    public ModuleContext moduleContext;
+    public Activity contetxt;           //宿主Activity
+    public FragmentActivity mContext;   //宿主FragmentActivity
+    public ModuleContext moduleContext; //宿主相关信息
     public Handler handler;
     public ViewGroup parentTop;         //顶层布局
     public ViewGroup parentBottom;      //底层布局
     public ViewGroup parentCenter;      //中层布局
-    public View own;
+    public View own;                    //宿主View
     public List<View> viewList = new ArrayList<>();
 
+//    public void setModuleContext(ModuleContext moduleContext) {
+//        this.moduleContext = moduleContext;
+//    }
+
+    public void setContentView(int layoutResID){
+        LayoutInflater.from(contetxt.getApplicationContext()).inflate(layoutResID, moduleContext.getViewGroups().get(0), true);
+    }
+
     @Override
-    public void init(ModuleContext moduleContext, String extend) {
+    public void init(ModuleContext moduleContext, Bundle extend) {
+        this.moduleContext = moduleContext;
         contetxt = moduleContext.getActivity();
         parentTop = moduleContext.getView(ModuleContext.TOP_VIEW_GROUP);
         parentBottom = moduleContext.getView(ModuleContext.BOTTOM_VIEW_GROUP);
@@ -76,5 +86,29 @@ public class BasicModule extends AbsModule {
     @Override
     public void onDestroy() {
 
+    }
+
+    /**
+     * 查找控件
+     * @param id 控件ID
+     * @param <T> 控件范型
+     * @return
+     */
+    public <T extends View> T findViewById(int id) {
+        if (moduleContext != null && moduleContext.getViewGroups() != null) {
+            if (moduleContext.getViewGroups().size() > 0) {
+                return moduleContext.getViewGroups().get(0).findViewById(id);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 吐司
+     * @param text
+     * @param duration
+     */
+    public void showToast(CharSequence text,int duration){
+        Toast.makeText(moduleContext.getActivity(),text,duration).show();
     }
 }

@@ -2,12 +2,17 @@ package com.hyt.base.module.manager;
 
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.util.ArrayMap;
 
 import com.hyt.base.module.base.AbsModule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
  * All rights Reserved, Designed By www.huanyutong.com
@@ -25,25 +30,41 @@ import java.util.List;
  * @update [1][2020-09-11] [LinShiJing][变更描述]
  */
 public class ModuleManager {
-    private List<String> modules = new ArrayList<>(); //模块类全限定名
+    private ArrayMap<String, ArrayList<Integer>> modules; //模块名字（类全限定名）
     @SuppressLint("NewApi")
     protected ArrayMap<String, AbsModule> allModules = new ArrayMap<>();//模块实体
 
-    public List<String> getModuleNames() {
+    ExecutorService pool;
+    Handler handler = new Handler();
+
+    public ExecutorService getPool() {
+        if (pool == null)
+            pool = Executors.newSingleThreadExecutor();
+        return pool;
+    }
+
+    public Handler getHandler() {
+        if (pool == null)
+            handler = new Handler();
+        return handler;
+    }
+
+    public ArrayMap<String, ArrayList<Integer>> getModules() {
         return modules;
     }
 
     /**
      * 模块配置信息
+     *
      * @param modules
      */
-    public void moduleConfig(List<String> modules){
-        this.modules=modules;
+    public void moduleConfig(ArrayMap<String, ArrayList<Integer>> modules) {
+        this.modules = modules;
     }
 
     @SuppressLint("NewApi")
-    public AbsModule getModuleByNames(String name){
-        if(!allModules.isEmpty()){
+    public AbsModule getModuleByNames(String name) {
+        if (!allModules.isEmpty()) {
             return allModules.get(name);
         }
         return null;
@@ -52,9 +73,9 @@ public class ModuleManager {
     /**
      * 恢复周期
      */
-    public void onResume(){
-        for (AbsModule module:allModules.values()){
-            if(module!=null){
+    public void onResume() {
+        for (AbsModule module : allModules.values()) {
+            if (module != null) {
                 module.onResume();
             }
         }
@@ -63,9 +84,9 @@ public class ModuleManager {
     /**
      * 暂停周期
      */
-    public void onPause(){
-        for (AbsModule module:allModules.values()){
-            if(module!=null){
+    public void onPause() {
+        for (AbsModule module : allModules.values()) {
+            if (module != null) {
                 module.onPause();
             }
         }
@@ -74,9 +95,9 @@ public class ModuleManager {
     /**
      * 停止周期
      */
-    public void onStop(){
-        for (AbsModule module:allModules.values()){
-            if(module!=null){
+    public void onStop() {
+        for (AbsModule module : allModules.values()) {
+            if (module != null) {
                 module.onStop();
             }
         }
@@ -84,12 +105,13 @@ public class ModuleManager {
 
     /**
      * 配置变更周期
+     *
      * @param newConfig
      */
-    public void onConfigurationChanged(Configuration newConfig){
-        for(AbsModule module:allModules.values()){
-            if(module!=null){
-                module.onOrientationChanges(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE);
+    public void onConfigurationChanged(Configuration newConfig) {
+        for (AbsModule module : allModules.values()) {
+            if (module != null) {
+                module.onOrientationChanges(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
             }
         }
     }
@@ -97,9 +119,9 @@ public class ModuleManager {
     /**
      * 销毁周期
      */
-    public void onDestroy(){
-        for (AbsModule module:allModules.values()){
-            if(module!=null){
+    public void onDestroy() {
+        for (AbsModule module : allModules.values()) {
+            if (module != null) {
                 module.onDestroy();
             }
         }

@@ -2,10 +2,17 @@ package com.hyt.base.module.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.util.SparseArrayCompat;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
+import com.hyt.base.module.base.AbsModule;
+import com.hyt.base.module.config.ModuleContext;
 import com.hyt.base.module.manager.ModuleManager;
+import com.hyt.base.module.util.ModuleFactory;
+import com.hyt.base.module.util.ModuleUtil;
 
 import java.util.ArrayList;
 
@@ -25,6 +32,8 @@ import java.util.ArrayList;
  * @update [1][2020-09-14] [LinShiJing][变更描述]
  */
 public class ViewModuleManager extends ModuleManager {
+    private static final String TAG = ViewModuleManager.class.getSimpleName();
+
     /**
      * 初始化业务模块
      *
@@ -35,6 +44,49 @@ public class ViewModuleManager extends ModuleManager {
     public void initModules(Bundle saveInstance, Activity activity, View rootView, ArrayMap<String, ArrayList<Integer>> modules) {
         if (activity == null && modules == null) {
             return;
+        }
+        moduleConfig(modules);
+        initModule(saveInstance, activity, rootView);
+    }
+
+    public void initModule(final Bundle saveIntanceState, final Activity activity, final View rootView) {
+        //获取配置
+        for (final String moduleName : getModules().keySet()) {
+            if (ModuleUtil.empty(moduleName)) {
+                return;
+            }
+            getPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "ViewModuleManager init module name: " + moduleName);
+
+                    final AbsModule module = ModuleFactory.newModuleInstance(moduleName);
+                    if (module != null) {
+                        getHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ModuleContext moduleContext = new ModuleContext();
+                                moduleContext.setActivity(activity);
+                                moduleContext.setSaveInstance(saveIntanceState);
+
+                                //关联视图
+                                SparseArrayCompat<ViewGroup> sVerticalViews = new SparseArrayCompat<>();
+                                ArrayList<Integer> viewIds = getModules().get(moduleName);
+                                if (viewIds != null && viewIds.size() > 0) {
+                                    for (int i = 0; i < viewIds.size(); i++) {
+                                        sVerticalViews.put(i, (ViewGroup) rootView.findViewById(viewIds.get(i).intValue()));
+                                    }
+                                }
+
+                                moduleContext.setViewGroups(sVerticalViews);
+                                module.init(moduleContext, saveIntanceState);
+
+                                allModules.put(moduleName, module);
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 }

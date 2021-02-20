@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="1.7">
+      <module name="VoerkaSDK.app" target="1.8" />
+      <module name="VoerkaSDK.app-core" target="1.8" />
+      <module name="VoerkaSDK.base" target="1.8" />
+      <module name="VoerkaSDK.bus" target="1.8" />
+      <module name="VoerkaSDK.danmu" target="1.8" />
+      <module name="VoerkaSDK.data" target="1.8" />
+      <module name="VoerkaSDK.main" target="1.8" />
+      <module name="VoerkaSDK.permission" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

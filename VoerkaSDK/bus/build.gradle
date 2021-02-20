@@ -10,7 +10,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'//混淆文件
         }
     }
-
 }
 
 dependencies {

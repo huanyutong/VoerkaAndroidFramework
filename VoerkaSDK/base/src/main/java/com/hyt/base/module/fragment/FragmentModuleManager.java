@@ -12,6 +12,7 @@ import com.hyt.base.module.base.AbsModule;
 import com.hyt.base.module.config.ModuleContext;
 import com.hyt.base.module.util.ModuleFactory;
 import com.hyt.base.module.manager.ModuleManager;
+import com.hyt.base.module.util.ModuleUtil;
 
 import java.util.ArrayList;
 
@@ -33,35 +34,62 @@ import java.util.ArrayList;
 public class FragmentModuleManager extends ModuleManager {
     private final String TAG = this.getClass().getSimpleName();
 
-    public void initModules(Bundle saveInstance, Activity activity, View rootView, ArrayMap<String, ArrayList<Integer>> modules){
-        if(activity==null||modules==null){
+    public void initModules(Bundle saveInstance, Activity activity, View rootView, ArrayMap<String, ArrayList<Integer>> modules) {
+        if (activity == null || modules == null) {
             return;
         }
-        moduleConfig(new ArrayList<>(modules.keySet()));
+        //配置Activity下的所有module全限定名 后续可以根据名称还原module实体（实体才包含ViewGroup、Activity等参数）
+        moduleConfig(modules);
+        //初始化模块
+        initModule(saveInstance, activity, rootView);
+    }
 
+    /**
+     * 初始化模块
+     *
+     * @param saveInstance
+     * @param activity
+     * @param rootView
+     */
+    private void initModule(final Bundle saveInstance, final Activity activity, final View rootView) {
         //获取配置
-        for(String moduleName:modules.keySet()){
-            Log.d(TAG,"FragmentModuleManager init module name:"+moduleName);
-            //创建模块
-            AbsModule module = ModuleFactory.newModuleInstance(moduleName);
-            if(module!=null){
-                ModuleContext moduleContext = new ModuleContext();
-                //关联Activity
-                moduleContext.setActivity(activity);
-                moduleContext.setSaveInstance(saveInstance);
-                //关联视图
-                SparseArrayCompat<ViewGroup> viewGroups = new SparseArrayCompat<>();
-                ArrayList<Integer> viewIds = modules.get(moduleName);
-                if(viewIds!=null&&viewIds.size()>0){
-                    for(int i=0;i<viewIds.size();i++) {
-                        //添加视图到视图列表
-                        viewGroups.put(i, (ViewGroup) rootView.findViewById(viewIds.get(i).intValue()));
+        for (final String moduleName : getModules().keySet()) {
+            if (ModuleUtil.empty(moduleName)) {
+                return;
+            }
+            getPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "FragmentModuleManager init module name:" + moduleName);
+                    //创建模块
+                    final AbsModule module = ModuleFactory.newModuleInstance(moduleName);
+                    if (module != null) {
+                        final ModuleContext moduleContext = new ModuleContext();
+                        //关联Activity
+                        moduleContext.setActivity(activity);
+                        moduleContext.setSaveInstance(saveInstance);
+
+                        //关联视图
+                        SparseArrayCompat<ViewGroup> viewGroups = new SparseArrayCompat<>();
+                        ArrayList<Integer> viewIds = getModules().get(moduleName);
+                        if (viewIds != null && viewIds.size() > 0) {
+                            for (int i = 0; i < viewIds.size(); i++) {
+                                //添加视图到视图列表
+                                viewGroups.put(i, (ViewGroup) rootView.findViewById(viewIds.get(i).intValue()));
+                            }
+                        }
+                        moduleContext.setViewGroups(viewGroups);//保存视图
+
+                        getHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                module.init(moduleContext, saveInstance);//初始化各个module
+                                allModules.put(moduleName, module);
+                            }
+                        });
                     }
                 }
-                moduleContext.setViewGroups(viewGroups);//保存视图
-                module.init(moduleContext);//初始化各个module
-                allModules.put(moduleName,module);
-            }
+            });
         }
     }
 }

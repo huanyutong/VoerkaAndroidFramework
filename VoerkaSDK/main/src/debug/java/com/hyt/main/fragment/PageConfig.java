@@ -17,6 +17,10 @@ package com.hyt.main.fragment;
  */
 public class PageConfig {
     public static final String MODULE_DANMU = "com.hyt.main.danmu.Danmu";
-    public static final String MODULE_CHAT = "com.hyt.main.danmu.Chat";
-    public static final String MODULE_LIVE = "com.hyt.main.danmu.Live";
+    public static final String MODULE_CHAT = "com.hyt.main.chat.Chat";
+    public static final String MODULE_LIVE = "com.hyt.main.live.Live";
+
+    public static final String MODULE_EXDANMU = "com.hyt.danmu.ExDanmu";
+    public static final String MODULE_EXCHAT = "com.hyt.main.chat.ExChat";
+    public static final String MODULE_EXLIVE = "com.hyt.main.live.ExLive";
 }

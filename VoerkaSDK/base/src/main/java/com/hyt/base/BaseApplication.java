@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.hyt.base.module.bus.ModuleBus;
+
 /*
  * All rights Reserved, Designed By www.huanyutong.com
  * <p>项目名称: VoerkaSDK</p>
@@ -27,6 +29,16 @@ import android.util.Log;
 public class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private String tag = this.getClass().getSimpleName();
     private Activity mContext;
+
+    /**
+     * 调用ModuleCenter汇总的全部模块信息，并进行模板排列等处理工作。
+     * @param base
+     */
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        ModuleBus.init(base);
+    }
 
     /**
      * .程序创建的时候执行

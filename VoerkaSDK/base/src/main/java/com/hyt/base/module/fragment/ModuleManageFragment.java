@@ -32,17 +32,29 @@ public abstract class ModuleManageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //模块管理初始化
-        moduleManager = new FragmentModuleManager();
-        moduleManager.initModules(savedInstanceState, getActivity(), rootView, moduleConfig());
+        rootView = view;
+        if (empty()) {
+            //模块管理初始化
+            moduleManager = new FragmentModuleManager();
+            moduleManager.initModules(savedInstanceState, getActivity(), rootView, moduleConfig());
+        }
     }
 
     public abstract ArrayMap<String, ArrayList<Integer>> moduleConfig();
 
+    /**
+     * 模块管理者是否为空
+     *
+     * @return
+     */
+    private boolean empty() {
+        return moduleManager == null;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onResume();
         }
     }
@@ -50,7 +62,7 @@ public abstract class ModuleManageFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onStop();
         }
     }
@@ -58,7 +70,7 @@ public abstract class ModuleManageFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onDestroy();
         }
     }
@@ -66,7 +78,7 @@ public abstract class ModuleManageFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onConfigurationChanged(newConfig);
         }
     }

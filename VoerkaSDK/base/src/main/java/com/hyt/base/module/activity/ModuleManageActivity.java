@@ -1,25 +1,19 @@
 package com.hyt.base.module.activity;
 
 import android.app.Activity;
-import android.arch.core.util.Function;
-import android.content.pm.ModuleInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Consumer;
 import android.support.v4.util.SparseArrayCompat;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.hyt.base.R;
 import com.hyt.base.module.config.ModuleContext;
-import com.hyt.base.module.util.ModuleFactory;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 /*
  * All rights Reserved, Designed By www.huanyutong.com
@@ -40,56 +34,10 @@ public abstract class ModuleManageActivity extends Activity {
     private ActivityModuleManager moduleManager;
     private ModuleContext moduleContext;
 
-    private ViewGroup mTopViewGroup;
-    private ViewGroup mBottomViewGroup;
-    private ViewGroup pluginViewGroup;
-
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //设定多个层级
-        mTopViewGroup = findViewById(R.id.layout_top);
-        mBottomViewGroup = findViewById(R.id.layout_bottom);
-        pluginViewGroup = findViewById(R.id.layout_plugincenter);
-        moduleManager = new ActivityModuleManager();//初始化管理者
-        moduleManager.moduleConfig(new ArrayList<>(moduleConfig().keySet()));
-        initView(savedInstanceState);
-//        onInit(savedInstanceState);
-    }
-
-    public void initView(final Bundle savedInstanceState) {
-        moduleContext = new ModuleContext();
-        moduleContext.setActivity(this);
-        moduleContext.setSaveInstance(savedInstanceState);
-        //关联视图
-        SparseArrayCompat<ViewGroup> sVerticalViews = new SparseArrayCompat<>();
-        sVerticalViews.put(ModuleContext.TOP_VIEW_GROUP, mTopViewGroup);
-        sVerticalViews.put(ModuleContext.BOTTOM_VIEW_GROUP, mBottomViewGroup);
-        sVerticalViews.put(ModuleContext.PLUGIN_CENTER_VIEW, pluginViewGroup);
-        moduleContext.setViewGroups(sVerticalViews);
-
-        Observable.fromIterable(moduleManager.getModuleNames())
-                .map(new Function<String, ModuleInfo>() {
-                    @Override
-                    public ModuleInfo apply(String input) {
-                        return new ModuleInfo(savedInstanceState, ModuleFactory.newModuleInstance(s));
-                    }
-                })
-                .delay(10, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .ObserveOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ModuleInfo>() {
-                    @Override
-                    public void accept(ModuleInfo moduleInfo) {
-                        if (moduleInfo != null) {
-                            long before = System.currentTimeMillis();
-                            moduleInfo.module.init(moduleContext, null);
-                            Log.d(STORAGE_SERVICE, "modulename:" + moduleInfo.getClass().getSimpleName() +
-                                    " init time = " + (System.currentTimeMillis() - before) + "ms");
-                            moduleManager.putModule(moduleInfo.name,moduleInfo.module);
-                        }
-                    }
-                });
+        onInit(savedInstanceState);
     }
 
     /**
@@ -128,10 +76,10 @@ public abstract class ModuleManageActivity extends Activity {
      * @param savedInstanceState
      */
     private void initModuleManager(Bundle savedInstanceState) {
-        if (moduleManager == null) {
+        if (empty()) {
             long ti = System.currentTimeMillis();
             moduleManager = new ActivityModuleManager();//初始化管理者
-            moduleManager.initModules(savedInstanceState, ModuleManageActivity.this, moduleConfig());
+            moduleManager.initModules(savedInstanceState, this, moduleConfig());
             Log.v("ModuleManageActivity", "init use time =" + (System.currentTimeMillis() - ti));
         }
     }
@@ -139,10 +87,18 @@ public abstract class ModuleManageActivity extends Activity {
     //获取配置列表
     public abstract ArrayMap<String, ArrayList<Integer>> moduleConfig();
 
+    /**
+     * 模块管理者是否为空
+     * @return
+     */
+    private boolean empty() {
+        return moduleManager == null;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onResume();
         }
     }
@@ -150,7 +106,7 @@ public abstract class ModuleManageActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onStop();
         }
     }
@@ -158,7 +114,7 @@ public abstract class ModuleManageActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onDestroy();
         }
     }
@@ -166,7 +122,7 @@ public abstract class ModuleManageActivity extends Activity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onConfigurationChanged(newConfig);
         }
     }

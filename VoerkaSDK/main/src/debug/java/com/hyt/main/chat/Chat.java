@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hyt.base.module.base.AbsModule;
+import com.hyt.base.module.base.BasicModule;
 import com.hyt.base.module.config.ModuleContext;
 import com.hyt.main.R;
 
@@ -25,21 +26,12 @@ import com.hyt.main.R;
  * @update [序号][日期YYYY-MM-DD] [更改人姓名][变更描述]
  * @update [1][2020-09-12] [LinShiJing][变更描述]
  */
-public class Chat extends AbsModule {
-    private Activity activity;
-    private ViewGroup parentViewGroup;
-    private View contentView;
+public class Chat extends BasicModule {
 
     @Override
-    public void init(ModuleContext moduleContext) {
-        activity = moduleContext.getActivity();
-        parentViewGroup = moduleContext.getViewGroups().get(0);
-        initView();
-    }
-
-    private void initView() {
-        contentView = LayoutInflater.from(activity)
-                .inflate(R.layout.activity_chat, parentViewGroup, true);
+    public void init(ModuleContext moduleContext, Bundle extend) {
+        super.init(moduleContext,extend);
+        setContentView(R.layout.activity_chat);
     }
 
     @Override

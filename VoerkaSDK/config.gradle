@@ -19,7 +19,8 @@ ext {
     appId = [
             app : "com.hyt.voerkasdk",
             base: "com.hyt.base",
-            main: "com.hyt.main"
+            main: "com.hyt.main",
+            danmu: "com.hyt.danmu"
     ]
     // 生产/测试环境配置
     url = [
@@ -33,7 +34,9 @@ ext {
             constraint: "com.android.support.constraint:constraint-layout:1.1.3",
             junit     : "junit:junit:4.12",
             runner    : "com.android.support.test:runner:1.0.2",
-            espresso  : "com.android.support.test.espresso:espresso-core:3.0.2"
+            espresso  : "com.android.support.test.espresso:espresso-core:3.0.2",
+            rxjava    : "io.reactivex.rxjava2:rxjava:2.2.21",
+            rxandroid : "io.reactivex.rxjava2:rxandroid:2.1.1"
     ]
 
     //设置APP配置
@@ -112,6 +115,8 @@ ext {
             extension.androidTestImplementation supportDependencies.espresso
             //每个module都需要引用路由的apt插件库才能生成相应代码，这里无须重复编写每个module
 //            extension.annotationProcessor 'com.alibaba.arouter-compiler:1.1.1'
+            extension.implementation supportDependencies.rxjava
+            extension.implementation supportDependencies.rxandroid
     }
 }
 

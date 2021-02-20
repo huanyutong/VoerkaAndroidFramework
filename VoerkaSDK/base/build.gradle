@@ -13,6 +13,7 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':annotation')
     implementation project(path: ':bus')
     implementation project(path: ':data')
     implementation project(path: ':permission')

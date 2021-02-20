@@ -33,33 +33,49 @@ public abstract class ModuleManageView extends View {
 
     public ModuleManageView(Context context, Bundle savedInstanceState, View rootView) {
         super(context);
-        moduleManager = new ViewModuleManager();//初始化管理者
-        moduleManager.initModules(savedInstanceState, (Activity) context, rootView, moduleConfig());
+        if (empty()) {
+            moduleManager = new ViewModuleManager();//初始化管理者
+            moduleManager.initModules(savedInstanceState, (Activity) context, rootView, moduleConfig());
+        }
     }
 
     public abstract ArrayMap<String, ArrayList<Integer>> moduleConfig();
 
+    /**
+     * 模块管理者是否为空
+     *
+     * @return
+     */
+    private boolean empty() {
+        return moduleManager == null;
+    }
+
     public void onResume() {
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onResume();
         }
     }
 
+    public void onPause() {
+        if (!empty())
+            moduleManager.onPause();
+    }
+
     public void onStop() {
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onStop();
         }
     }
 
     public void onDestroy() {
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onDestroy();
         }
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (moduleManager != null) {
+        if (!empty()) {
             moduleManager.onConfigurationChanged(newConfig);
         }
     }

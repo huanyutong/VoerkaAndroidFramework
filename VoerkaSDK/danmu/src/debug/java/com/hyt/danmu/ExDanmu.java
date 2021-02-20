@@ -1,13 +1,16 @@
-package com.hyt.main.danmu;
+package com.hyt.danmu;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.LayoutInflater;
+import android.view.View;
 
-import com.hyt.base.module.base.AbsModule;
+import com.hyt.annotation.ModuleUnit;
+import com.hyt.base.module.base.BasicModule;
+import com.hyt.base.module.bus.IModuleUnit;
 import com.hyt.base.module.config.ModuleContext;
-import com.hyt.main.R;
+import com.hyt.model.ModuleMeta;
+
+import java.util.Set;
 
 /*
  * All rights Reserved, Designed By www.huanyutong.com
@@ -24,25 +27,22 @@ import com.hyt.main.R;
  * @update [序号][日期YYYY-MM-DD] [更改人姓名][变更描述]
  * @update [1][2020-09-12] [LinShiJing][变更描述]
  */
-public class Danmu extends AbsModule {
-    private Activity activity;
-    private ViewGroup parentViewGroup;
-    private TextView contentView;
+@ModuleUnit(templet="top,normal",title="danmu")
+public class ExDanmu extends BasicModule {
+    private View contentView;
 
     @Override
-    public void init(ModuleContext moduleContext) {
-        setContentView(R.layout.activity_danmu);
-        //        activity = moduleContext.getActivity();
-        //        parentViewGroup = moduleContext.getViewGroups().get(0);
-        //        initView();
-        contentView = findViewById(R.id.danmu_content);
+    public void init(ModuleContext moduleContext, Bundle extend) {
+        super.init(moduleContext, extend);
+        initView();//初始化视图
     }
 
-    //    private void initView() {
-    //        contentView = LayoutInflater.from(activity).inflate(R.layout.activity_danmu, parentViewGroup, true);
-    //        contentView.findViewById(R.id.danmu_content);
-    //        showToast("",Toast.LENGTH_SHORT);
-    //    }
+    /**
+     * 初始化视图
+     */
+    private void initView() {
+        contentView = LayoutInflater.from(contetxt).inflate(R.layout.activity_danmu, parentTop, true);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

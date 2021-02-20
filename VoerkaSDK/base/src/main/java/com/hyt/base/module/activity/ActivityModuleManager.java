@@ -10,8 +10,10 @@ import com.hyt.base.module.base.AbsModule;
 import com.hyt.base.module.config.ModuleContext;
 import com.hyt.base.module.manager.ModuleManager;
 import com.hyt.base.module.util.ModuleFactory;
+import com.hyt.base.module.util.ModuleUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * All rights Reserved, Designed By www.huanyutong.com
@@ -47,31 +49,57 @@ public class ActivityModuleManager extends ModuleManager {
             return;
         }
         //配置Activity下的所有module全限定名 后续可以根据名称还原module实体（实体才包含ViewGroup、Activity等参数）
-        moduleConfig(new ArrayList<>(modules.keySet()));
+        moduleConfig(modules);
+        //初始化模块
+        initModule(saveInstance, activity);
+    }
+
+    /**
+     * 初始化模块
+     *
+     * @param saveInstance
+     * @param activity
+     */
+    private void initModule(final Bundle saveInstance, final Activity activity) {
         //依次给所有module初始化：1.创建实体 2.传递参数 3.调用初始化 4.纳入生命周期管理
-        for (String moduleName : modules.keySet()) {
-            //创建对应module
-            AbsModule module = ModuleFactory.newModuleInstance(moduleName);
-            if (module != null) {
-                //创建参数
-                ModuleContext moduleContext = new ModuleContext();
-                moduleContext.setActivity(activity);
-                moduleContext.setSaveInstance(saveInstance);
-                //关联视图
-                SparseArrayCompat<ViewGroup> viewGroups = new SparseArrayCompat<>();
-                ArrayList<Integer> mViewIds = modules.get(moduleName);
-                if (mViewIds != null && mViewIds.size() > 0) {
-                    for (int i = 0; i < mViewIds.size(); i++) {
-                        viewGroups.put(i, (ViewGroup) activity.findViewById(mViewIds.get(i)));
+        for (final String moduleName : getModules().keySet()) {
+            if (ModuleUtil.empty(moduleName)) {
+                return;
+            }
+            getPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    //创建对应module
+                    final AbsModule module = ModuleFactory.newModuleInstance(moduleName);
+                    if (module != null) {
+                        //创建参数
+                        final ModuleContext moduleContext = new ModuleContext();
+                        moduleContext.setActivity(activity);
+                        moduleContext.setSaveInstance(saveInstance);
+
+                        //关联视图
+                        SparseArrayCompat<ViewGroup> viewGroups = new SparseArrayCompat<>();
+                        ArrayList<Integer> mViewIds = getModules().get(moduleName);
+                        if (mViewIds != null && mViewIds.size() > 0) {
+                            for (int i = 0; i < mViewIds.size(); i++) {
+                                viewGroups.put(i, (ViewGroup) activity.findViewById(mViewIds.get(i)));
+                            }
+                        }
+                        moduleContext.setViewGroups(viewGroups);//保存视图
+                        //调用初始化（参数传递）
+                        //                module.setModuleContext(moduleContext);
+
+                        getHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                module.init(moduleContext, saveInstance);//初始化每个module
+                                //纳入管理
+                                allModules.put(moduleName, module);//记录module的名称和信息
+                            }
+                        });
                     }
                 }
-                moduleContext.setViewGroups(viewGroups);//保存视图
-                //调用初始化（参数传递）
-                module.setModuleContext(moduleContext);
-                module.init(moduleContext);
-                //纳入管理
-                allModules.put(moduleName, module);//记录module的名称和信息
-            }
+            });
         }
     }
 

@@ -1,3 +1,6 @@
+include ':danmu'
+include ':annotation'
+include ':compiler'
 rootProject.name='VoerkaSDK'
 include ':app'
 include ':base'
